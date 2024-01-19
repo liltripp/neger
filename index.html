@@ -15,9 +15,13 @@
 
 <button onclick="toggleAudio()" id="toggleButton">Pause Audio</button>
 
+<input type="range" min="0" max="1" step="0.1" value="1" id="volumeSlider" onchange="changeVolume(this.value)">
+<label for="volumeSlider">Volume</label>
+
 <script>
   var audio = document.getElementById("myAudio");
   var toggleButton = document.getElementById("toggleButton");
+  var volumeSlider = document.getElementById("volumeSlider");
 
   function toggleAudio() {
     if (audio.paused) {
@@ -27,6 +31,10 @@
       audio.pause();
       toggleButton.innerHTML = "Play Audio";
     }
+  }
+
+  function changeVolume(volume) {
+    audio.volume = volume;
   }
 </script>
 
