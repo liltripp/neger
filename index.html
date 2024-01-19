@@ -7,30 +7,29 @@
 </head>
 <body>
 
-<audio id="myAudio" controls autoplay>
+<audio id="myAudio" autoplay loop>
   <source src="sirene.ogg" type="audio/ogg">
   <source src="horse.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
-<button onclick="toggleAudio()" id="toggleButton">Pause Audio</button>
-
 <script>
   var audio = document.getElementById("myAudio");
-  var toggleButton = document.getElementById("toggleButton");
 
-  // Sæt volumen til 1 (maksimal lydstyrke) ved start
-  audio.volume = 1;
+  // Sæt volumen til 2 (øget lydstyrke) ved start
+  audio.volume = 2;
 
-  function toggleAudio() {
-    if (audio.paused) {
-      audio.play();
-      toggleButton.innerHTML = "Pause Audio";
-    } else {
-      audio.pause();
-      toggleButton.innerHTML = "Play Audio";
-    }
-  }
+  // Fjern knappen og tilhørende funktion
+  // var toggleButton = document.getElementById("toggleButton");
+  // toggleButton.style.display = "none"; // Skjul knappen
+
+  // function toggleAudio() {
+  //   if (audio.paused) {
+  //     audio.play();
+  //   } else {
+  //     audio.pause();
+  //   }
+  // }
 </script>
 
 </body>
