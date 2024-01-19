@@ -3,33 +3,114 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Audio Player</title>
+  <title>Neger</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: url('test.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #audioContainer {
+      max-width: 600px;
+      width: 80%;
+      background-color: #1e1e1e;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      text-align: center;
+    }
+
+    #myAudio {
+      width: 100%;
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+
+    h2 {
+      color: #ffffff;
+      margin-bottom: 30px;
+    }
+
+    button {
+      background-color: #1976D2;
+      color: #fff;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    input[type="range"] {
+      width: 80%;
+      margin-top: 10px;
+    }
+
+    label {
+      display: inline-block;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
 
-<audio id="myAudio" autoplay loop>
-  <source src="sirene.ogg" type="audio/ogg">
-  <source src="horse.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
+<div id="audioContainer">
+  <audio id="myAudio" autoplay>
+    <source src="sirene.ogg" type="audio/ogg">
+    <source src="horse.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <h2>Sirener</h2>
+
+  <button onclick="toggleAudio()" id="toggleButton">Sluk Siren</button>
+  <button onclick="toggleLoop()" id="loopButton">Sluk Loop</button>
+
+  <br>
+
+  <input type="range" min="0" max="1" step="0.1" value="1" id="volumeSlider" onchange="changeVolume(this.value)">
+  <label for="volumeSlider">Lyd</label>
+</div>
 
 <script>
   var audio = document.getElementById("myAudio");
+  var toggleButton = document.getElementById("toggleButton");
+  var volumeSlider = document.getElementById("volumeSlider");
+  var loopButton = document.getElementById("loopButton");
+  var isLooping = false;
 
-  // Sæt volumen til 2 (øget lydstyrke) ved start
-  audio.volume = 2;
+  function toggleAudio() {
+    if (audio.paused) {
+      audio.play();
+      toggleButton.innerHTML = "Tænd Siren";
+    } else {
+      audio.pause();
+      toggleButton.innerHTML = "Sluk Siren";
+    }
+  }
 
-  // Fjern knappen og tilhørende funktion
-  // var toggleButton = document.getElementById("toggleButton");
-  // toggleButton.style.display = "none"; // Skjul knappen
+  function changeVolume(volume) {
+    audio.volume = volume;
+  }
 
-  // function toggleAudio() {
-  //   if (audio.paused) {
-  //     audio.play();
-  //   } else {
-  //     audio.pause();
-  //   }
-  // }
+  function toggleLoop() {
+    if (isLooping) {
+      audio.loop = false;
+      isLooping = false;
+      loopButton.innerHTML = "Sluk Loop";
+    } else {
+      audio.loop = true;
+      isLooping = true;
+      loopButton.innerHTML = "Tænd Loop";
+    }
+  }
 </script>
 
 </body>
