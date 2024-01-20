@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neger</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -16,102 +18,247 @@
       height: 100vh;
       margin: 0;
     }
-
-    #audioContainer {
-      max-width: 600px;
-      width: 80%;
+  
+    #container {
+      max-width: 1400px;
+      width: 90%;
+      display: flex;
+      align-items: stretch;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+  
+    #sidebar {
       background-color: #1e1e1e;
-      padding: 40px;
-      border-radius: 10px;
+      border-radius: 15px 0 0 15px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-      text-align: center;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-
-    #myAudio {
-      width: 100%;
-      margin-bottom: 20px;
-      border-radius: 5px;
-    }
-
-    h2 {
-      color: #ffffff;
-      margin-bottom: 30px;
-    }
-
-    button {
-      background-color: #1976D2;
+  
+    .tab-button {
+      background-color: #1e1e1e;
       color: #fff;
-      padding: 15px 30px;
+      padding: 10px 15px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      margin: 10px;
+      margin-bottom: 10px;
+      transition: background-color 0.3s;
     }
-
+  
+    .tab-button:hover {
+      background-color: #333;
+    }
+  
+    #audioContainer {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      overflow: hidden;
+    }
+  
+    .tab-content {
+      flex: 1;
+      padding: 20px;
+      display: none;
+      border-radius: 10px;
+      background-color: #141414;
+    }
+  
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    #myAudio {
+      width: 100%;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+  
+    h2 {
+      color: #ffffff;
+      margin-bottom: 10px;
+      margin-top: 0;
+    }
+  
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+  
+    button {
+      background-color: #1976D2;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  
+    button:hover {
+      background-color: #1565C0;
+    }
+  
     input[type="range"] {
-      width: 80%;
-      margin-top: 10px;
+      width: 70%; /* Adjusted width */
+      margin: 0 auto; /* Centering the slider */
+      display: block; /* Ensuring block-level display for centering */
     }
-
+  
     label {
-      display: inline-block;
+      display: block;
       margin-top: 10px;
+      color: #ccc;
+    }
+  
+    #mapContainer {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+  
+    #map {
+      width: 100%;
+      height: 100%;
+      border-radius: 0 15px 15px 0;
+      transition: filter 0.5s ease;
+    }
+  
+    #mapOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      filter: blur(5px);
+    }
+  
+    .nigtext {
+      margin-left: 255px;
     }
   </style>
+  
 </head>
+
 <body>
+  <div id="container">
+    <div id="sidebar">
+      <button class="tab-button" onclick="openTab('sirenTab')">Siren</button>
+      <button class="tab-button" onclick="openTab('controlsTab')">Controls</button>
+      <button id="settingsButton" class="tab-button" onclick="openTab('settingsTab')">Settings</button>
+    </div>
 
-<div id="audioContainer">
-  <audio id="myAudio" autoplay>
-    <source src="sirene.ogg" type="audio/ogg">
-    <source src="horse.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+    <div id="audioContainer">
+      <div id="sirenTab" class="tab-content active">
+        <h2 class="nigtext">Sirener</h2>
+        <audio id="myAudio" autoplay>
+          <source src="sirene.ogg" type="audio/ogg">
+          <source src="horse.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+        <div class="button-container">
+          <button onclick="toggleAudio()" id="toggleButton">Toggle Siren</button>
+        </div>
+        <input type="range" min="0" max="1" step="0.1" value="1" id="volumeSlider" onchange="changeVolume(this.value)">
+      </div>
 
-  <h2>Sirener</h2>
+      <div id="controlsTab" class="tab-content">
+        <p>Additional controls go here. This is a placeholder content.</p>
+      </div>
 
-  <button onclick="toggleAudio()" id="toggleButton">Sluk Siren</button>
-  <button onclick="toggleLoop()" id="loopButton">Sluk Loop</button>
+      <div id="settingsTab" class="tab-content">
+        <h2>Settings</h2>
+        <!-- Only the "Blur Map" button is retained in the settings -->
+        <button id="blurButton" onclick="blurMap(event)">Blur Map</button>
+      </div>
+    </div>
 
-  <br>
+    <div id="mapContainer">
+      <div id="mapOverlay"></div>
+      <div id="map"></div>
+    </div>
+  </div>
 
-  <input type="range" min="0" max="1" step="0.1" value="1" id="volumeSlider" onchange="changeVolume(this.value)">
-  <label for="volumeSlider">Lyd</label>
-</div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    var audio = document.getElementById("myAudio");
+    var toggleButton = document.getElementById("toggleButton");
+    var volumeSlider = document.getElementById("volumeSlider");
+    var loopButton = document.getElementById("loopButton");
+    var isLooping = false;
 
-<script>
-  var audio = document.getElementById("myAudio");
-  var toggleButton = document.getElementById("toggleButton");
-  var volumeSlider = document.getElementById("volumeSlider");
-  var loopButton = document.getElementById("loopButton");
-  var isLooping = false;
-
-  function toggleAudio() {
-    if (audio.paused) {
-      audio.play();
-      toggleButton.innerHTML = "Tænd Siren";
-    } else {
-      audio.pause();
-      toggleButton.innerHTML = "Sluk Siren";
+    function toggleAudio() {
+      if (audio.paused) {
+        audio.play();
+        audio.loop = true;
+        isLooping = true;
+        toggleButton.innerHTML = "Toggle Siren";
+      } else {
+        audio.pause();
+        audio.loop = true;
+        isLooping = true;
+        toggleButton.innerHTML = "Toggle Siren";
+      }
     }
-  }
 
-  function changeVolume(volume) {
-    audio.volume = volume;
-  }
-
-  function toggleLoop() {
-    if (isLooping) {
-      audio.loop = false;
-      isLooping = false;
-      loopButton.innerHTML = "Sluk Loop";
-    } else {
-      audio.loop = true;
-      isLooping = true;
-      loopButton.innerHTML = "Tænd Loop";
+    function changeVolume(volume) {
+      audio.volume = volume;
     }
-  }
-</script>
 
+    function blurMap(event) {
+      event.preventDefault();
+      var mapOverlay = document.getElementById("mapOverlay");
+      mapOverlay.style.filter = "blur(5px)";
+    }
+
+    function openTab(tabId) {
+      var tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(function (tab) {
+        tab.classList.remove('active');
+      });
+
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      var mapContainer = document.getElementById("mapContainer");
+      var audioContainer = document.getElementById("audioContainer");
+
+      mapContainer.style.height = mapContainer.offsetWidth * 0.5625 + "px";
+      audioContainer.style.height = mapContainer.style.height;
+
+      // Get user's location based on IP
+      fetch('https://ipinfo.io/json')
+        .then(response => response.json())
+        .then(data => {
+          // Extract latitude and longitude from the "loc" field
+          var [lat, lon] = data.loc.split(',');
+
+          var map = L.map('map').setView([parseFloat(lat), parseFloat(lon)], 13);
+
+          L.tileLayer('https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=ZXwcuXruOVaa6kPLkQcF', {
+            tileSize: 512,
+            zoomOffset: -1,
+            detectRetina: true,
+          }).addTo(map);
+        })
+        .catch(error => {
+          console.error('Error fetching user location:', error);
+        });
+    });
+  </script>
 </body>
+
 </html>
